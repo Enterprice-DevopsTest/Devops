@@ -31,8 +31,6 @@ jobs:
 
       - name: Authenticate
         id: auth
-        env:
-          SFDXAUTHURL: ${{secrets.SFDX_AUTH_URL_MAX_QA}}  #TODO Use the real environment variables from github
         run: |
           echo "Authenticate successful"
 
