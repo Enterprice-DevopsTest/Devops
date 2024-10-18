@@ -2,11 +2,6 @@ name: 'PR Open/Update Triggered - Validate Deploy to MaxQA'
 on:
   pull_request:
     types: [ opened, reopened, synchronize ]
-    paths:
-      - 'src/**'
-      - 'src-org-dependent/**'
-      - 'devops-scripts/**'
-      - '.github/workflows/**'
     branches:
       - 'develop'
   merge_group:
