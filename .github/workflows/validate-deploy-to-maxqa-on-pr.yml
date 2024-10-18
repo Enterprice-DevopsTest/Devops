@@ -4,6 +4,8 @@ on:
     types: [ opened, reopened, synchronize ]
     branches:
       - 'develop'
+  merge_group:
+    types: [ checks_requested ]
 
   workflow_call:
     inputs:
