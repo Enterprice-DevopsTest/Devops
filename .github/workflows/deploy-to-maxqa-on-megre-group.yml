@@ -1,7 +1,7 @@
 name: 'Merge to develop branch - Deploy to MaxQA'
 on:
   merge_group:
-    types: [checks_requested]
+    types: [ checks_requested ]
 
 jobs:
   deploy-to-maxqa:
@@ -23,17 +23,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Salesforce CLI
-        run: npm install @salesforce/cli@${SF_CLI_VERSION} --global
-
-      - name: Install JS dependencies
-        run: npm ci
-
       - name: Get Changed Packages
         id: detect_changes
         run: |
           chmod +x ./devops-scripts/findChangedModules.sh
-          ./devops-scripts/findChangedModules.sh HEAD^   #compare changes vs previous commit in develop branch
+          ./devops-scripts/findChangedModules.sh   #compare changes vs previous commit in develop branch
 
       - name: Authenticate
         id: auth
