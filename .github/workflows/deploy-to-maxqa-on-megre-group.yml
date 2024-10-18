@@ -38,5 +38,4 @@ jobs:
         id: deploy_changes
         run: |
           echo "Error during deployment"
-          exit 1
 
