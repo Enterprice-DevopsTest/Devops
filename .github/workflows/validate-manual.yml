@@ -1,0 +1,80 @@
+name: 'Manual Validation'
+
+on:
+  workflow_dispatch:
+    inputs:
+      modules_to_validate:
+        description: List of modules to validate (space separated). If left blank then all modules will get validated
+        type: string
+      environment:
+        description: Environment
+        type: environment
+        required: true
+      test_level:
+        description: Apex Unit Tests Level
+        type: choice
+        required: true
+        options:
+          - NoTestRun
+          - RunAllTestsInOrg
+          - RunLocalTests
+          - RunSpecifiedTests
+        default: RunLocalTests  
+      specified_tests:
+        description: Apex Unit Tests (space separated). Keep input empty if you didn't select RunSpecifiedTests
+        type: string
+        required: false
+  workflow_call:
+    secrets:
+        SFDX_AUTH_URL:
+          required: false
+    inputs:
+      environment:
+        description: Environment
+        type: string
+        required: true
+      modules_to_validate:
+        description: List of modules to validate (space separated). If left blank then all modules will get validated
+        required: true
+        type: string
+      base_ref:
+        description: Ref to compare (usually "develop"); Used to generate delta package
+        required: false
+        type: string
+      test_level:
+        description: Apex Unit Tests Level
+        required: false
+        type: string
+      specified_tests:
+        description: Apex Unit Tests (space separated). Keep input empty if you didn't select RunSpecifiedTests
+        required: false
+        type: string  
+      is_release_branch:
+        description: Indicates if this is a release branch
+        type: boolean
+        required: false
+jobs:
+  validate-changes:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    env:
+      WORKING_BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+      IGNORED_SCAN_MODULES: ${{ vars.IGNORED_SCAN_MODULES }}
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install JS dependencies
+        run: echo "Installing JS dependencies..."
+
+      - name: Validate Changes on ${{ inputs.environment }}
+        id: validate_changes
+        env:
+          TEST_LEVEL: ${{ env.TEST_LEVEL }}
+          SPECIFIED_TESTS: ${{ env.SPECIFIED_TESTS }}
+        run: |
+          echo "Run validation..."   

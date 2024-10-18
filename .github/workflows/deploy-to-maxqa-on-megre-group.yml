@@ -1,0 +1,50 @@
+name: 'Merge to develop branch - Deploy to MaxQA'
+on:
+  merge_group:
+    types: [checks_requested]
+
+jobs:
+  deploy-to-maxqa:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    env:
+      SF_CLI_VERSION: ${{ vars.SF_CLI_VERSION }}
+      # Sets the deployment destination from sfdx-project.json
+      SF_APPLY_REPLACEMENTS_ON_CONVERT: ${{ vars.SF_APPLY_REPLACEMENTS_ON_CONVERT }}
+      API_MORTGAGE_ONBOARDING_PASSTHRU: 'PRE'
+      # Sets the allowed modifications to be controlled by DevOps team members
+      ALLOWED_DEV_MODIFICATIONS: ${{ vars.ALLOWED_DEV_MODIFICATIONS }}
+      DEVOPS_TEAM: ${{ vars.DEVOPS_TEAM }}
+    outputs:
+      should_notify: ${{ steps.check.outputs.should_notify }}
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Salesforce CLI
+        run: npm install @salesforce/cli@${SF_CLI_VERSION} --global
+
+      - name: Install JS dependencies
+        run: npm ci
+
+      - name: Get Changed Packages
+        id: detect_changes
+        run: |
+          chmod +x ./devops-scripts/findChangedModules.sh
+          ./devops-scripts/findChangedModules.sh HEAD^   #compare changes vs previous commit in develop branch
+
+      - name: Authenticate
+        id: auth
+        env:
+          SFDXAUTHURL: ${{secrets.SFDX_AUTH_URL_MAX_QA}}  #TODO Use the real environment variables from github
+        run: |
+          echo "Authenticate successful'
+
+      - name: Deploy Changes To MaxQA
+        id: deploy_changes
+        run: |
+          echo "Error during deployment"
+          exit 1
+
