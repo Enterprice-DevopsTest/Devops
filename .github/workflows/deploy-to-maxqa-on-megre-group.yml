@@ -33,11 +33,10 @@ jobs:
         id: auth
         run: |
           echo "Authenticated success"
-          exit 1
 
       - name: Deploy Changes To MaxQA
         id: deploy_changes
         run: |
-          echo "Error during deployment"
-          exit 1
+          echo "Success deployment"
+
 
