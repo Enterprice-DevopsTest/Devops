@@ -32,7 +32,7 @@ jobs:
       - name: Authenticate
         id: auth
         run: |
-          echo "Authenticate failed"
+          echo "Authenticated success"
           exit 1
 
       - name: Deploy Changes To MaxQA
