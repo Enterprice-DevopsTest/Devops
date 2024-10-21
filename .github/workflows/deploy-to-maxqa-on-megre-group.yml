@@ -2,6 +2,8 @@ name: 'Merge to develop branch - Deploy to MaxQA'
 on:
   pull_request:
     types: [ auto_merge_enabled ]
+  merge_group:
+    types: [ checks_requested ]
 
 jobs:
   deploy-to-maxqa:
@@ -38,6 +40,11 @@ jobs:
       - name: Deploy Changes To MaxQA
         id: deploy_changes
         run: |
-          echo "Error during deployment"
-          exit 1
+          if [ merge_group != 'merge_group' ]; then
+           echo "Ready to deploy"
+          else
+            echo "Start deploying"
+            echo "Failed"
+            exit 1
+          
 
