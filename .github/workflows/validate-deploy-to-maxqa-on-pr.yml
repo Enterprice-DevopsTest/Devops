@@ -43,5 +43,4 @@ jobs:
      with:
         environment: 'MaxQA'
         modules_to_validate: ${{ needs.get-changed-modules.outputs.changed_modules }}
-        base_ref: 'origin/develop'
      secrets: inherit
