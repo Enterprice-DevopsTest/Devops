@@ -40,7 +40,7 @@ jobs:
         id: deploy_changes
         run: |
           echo "
-          if [ "${{ github.event_name }}" = 'merge_queue' ]; then
+          if [ "$GITHUB_EVENT_NAME" = "merge_queue" ]; then
             echo "Start deploying"
             echo "Failed"
             exit 1
