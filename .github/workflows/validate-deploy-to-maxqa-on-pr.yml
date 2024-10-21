@@ -2,13 +2,10 @@ name: 'PR Open/Update Triggered - Validate Deploy to MaxQA'
 on:
   pull_request:
     types: [ opened, reopened, synchronize ]
-    paths:
-      - 'src/**'
-      - 'src-org-dependent/**'
-      - 'devops-scripts/**'
-      - '.github/workflows/**'
     branches:
       - 'develop'
+  merge_group:
+    types: [ checks_requested ]
 
   workflow_call:
     inputs:
@@ -45,6 +42,4 @@ jobs:
      uses: ./.github/workflows/validate-manual.yml
      with:
         environment: 'MaxQA'
-        modules_to_validate: ${{ needs.get-changed-modules.outputs.changed_modules || inputs.modules_to_validate }}
-        base_ref: 'origin/develop'
      secrets: inherit
