@@ -35,7 +35,6 @@ jobs:
         id: auth
         run: |
           echo "Authenticated success"
-          exit 1
 
       - name: Deploy Changes To MaxQA
         id: deploy_changes
