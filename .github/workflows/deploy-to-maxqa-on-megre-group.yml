@@ -39,7 +39,8 @@ jobs:
       - name: Deploy Changes To MaxQA
         id: deploy_changes
         run: |
-          if [ "$GITHUB_EVENT_NAME" = "merge_queue" ]; then
+          echo "$GITHUB_EVENT_NAME"
+          if [ "$GITHUB_EVENT_NAME" = "merge_group" ]; then
             echo "Start deploying"
             echo "Failed"
             exit 1
