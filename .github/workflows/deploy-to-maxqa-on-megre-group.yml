@@ -39,12 +39,13 @@ jobs:
       - name: Deploy Changes To MaxQA
         id: deploy_changes
         run: |
-          if [ "$merge_group" != 'merge_group' ]; then
-            echo "Ready to deploy"
-          else
+          echo "
+          if [ "${{ github.event_name }}" = 'merge_queue' ]; then
             echo "Start deploying"
             echo "Failed"
             exit 1
+          else
+            echo "Ready to deploy"
           fi
           
 
