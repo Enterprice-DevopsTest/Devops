@@ -40,11 +40,12 @@ jobs:
       - name: Deploy Changes To MaxQA
         id: deploy_changes
         run: |
-          if [ merge_group != 'merge_group' ]; then
-           echo "Ready to deploy"
+          if [ "$merge_group" != 'merge_group' ]; then
+            echo "Ready to deploy"
           else
             echo "Start deploying"
             echo "Failed"
             exit 1
+          fi
           
 
