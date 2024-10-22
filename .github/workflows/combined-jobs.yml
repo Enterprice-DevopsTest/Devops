@@ -1,0 +1,82 @@
+name: 'Merge to develop branch - Deploy to MaxQA'
+on:
+  pull_request:
+    types: [ opened, reopened, synchronize ]
+    branches:
+      - 'develop'
+  merge_group:
+    types: [ checks_requested ]
+
+jobs:
+  get-changed-modules:
+    outputs:
+      changed_modules: ${{ steps.detect_changes.outputs.changed_modules }}
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get Changed Packages
+        id: detect_changes
+        run: |
+          chmod +x ./devops-scripts/findChangedModules.sh
+          ./devops-scripts/findChangedModules.sh
+
+  validate-changes:
+    name: 'Validate Deployment'
+    needs:
+      - get-changed-modules
+    uses: ./.github/workflows/validate-manual.yml
+    with:
+      environment: 'MaxQA'
+    secrets: inherit
+
+  validate-ci-org:
+    needs:
+      - get-changed-modules
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate Ci-Org
+        run: echo "Ci-Org validation
+
+  deploy-to-maxqa:
+    needs:
+      - validate-changes
+      - validate-ci-org
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get Changed Packages
+        id: detect_changes
+        run: |
+          chmod +x ./devops-scripts/findChangedModules.sh
+          ./devops-scripts/findChangedModules.sh   #compare changes vs previous commit in develop branch
+
+      - name: Authenticate
+        id: auth
+        run: |
+          echo "Authenticated success"
+
+      - name: Deploy Changes To MaxQA
+        id: deploy_changes
+        run: |
+          echo "$GITHUB_EVENT_NAME"
+          if [ "$GITHUB_EVENT_NAME" = "merge_group" ]; then
+            echo "Start deploying"
+            echo "Failed"
+            exit 1
+          else
+            echo "Ready to deploy"
+          fi
+          
+
