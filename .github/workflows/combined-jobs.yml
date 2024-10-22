@@ -1,4 +1,4 @@
-name: 'Merge to develop branch - Deploy to MaxQA'
+name: 'Validate changes with deployment'
 on:
   pull_request:
     types: [ opened, reopened, synchronize ]
@@ -43,7 +43,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Validate Ci-Org
-        run: echo "Ci-Org validation
+        run: echo "Ci-Org validation"
 
   deploy-to-maxqa:
     needs:
