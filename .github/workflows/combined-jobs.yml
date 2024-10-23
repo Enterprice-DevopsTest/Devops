@@ -31,6 +31,7 @@ jobs:
     uses: ./.github/workflows/validate-manual.yml
     with:
       environment: 'MaxQA'
+      parent_event: ${{ github.event_name }}
     secrets: inherit
 
   validate-ci-org:

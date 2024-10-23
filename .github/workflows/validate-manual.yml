@@ -10,6 +10,9 @@ on:
         description: Environment
         type: string
         required: true
+      parent_event:
+        description: Event name
+        type: string
 
 jobs:
   validate-changes:
@@ -31,4 +34,7 @@ jobs:
       - name: Validate Changes on ${{ inputs.environment }}
         id: validate_changes
         run: |
+          echo "event name"
+          echo ${{ inputs.parent_event }}
+          echo "child event: $GITHUB_EVENT_NAME"
           echo "Run validation..."   
