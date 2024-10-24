@@ -27,11 +27,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Workflow run
-        run: |
-          run="${{ github.event.workflow_run }}"
-          echo "$run"
-
       - name: Show event
         run: echo "name- $GITHUB_EVENT_NAME"
 
