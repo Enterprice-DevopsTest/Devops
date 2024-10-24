@@ -6,7 +6,6 @@ public with sharing class classNameTest {
         Integer a = 10;
         Integer b = 20;
 
-
         String str1 = 'Hello';
         String str2 = 'World';
         String result = str1 + ' ' + str2;
