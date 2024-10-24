@@ -10,7 +10,7 @@ public with sharing class classNameTest {
         Integer sum = 0;
         for (Integer num : numbers) {
             sum += num;
-            
+
         }
     }
 }
