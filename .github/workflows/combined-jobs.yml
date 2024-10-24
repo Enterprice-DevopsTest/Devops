@@ -25,7 +25,7 @@ jobs:
     uses: ./.github/workflows/pr-ci-org-validation.yml
     secrets: inherit
 
-  deploy-to-maxqa:
+  deploy-to-max-qa:
     name: 'Deploy to MAxQA'
     needs:
       - validate-max-qa
