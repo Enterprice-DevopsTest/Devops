@@ -61,6 +61,6 @@ jobs:
     needs:
       - ci-org-validation
       - validate-changes
-    if: (needs.validate-changes.result == 'skipped' && needs.ci-org-validation.result == 'skipped') || (needs.validate-changes.result == 'success' && needs.ci-org-validation.result == 'success')
+    if: (always() && needs.validate-changes.result == 'skipped' && needs.ci-org-validation.result == 'skipped') || (needs.validate-changes.result == 'success' && needs.ci-org-validation.result == 'success')
     uses: ./.github/workflows/deploy-to-maxqa-after-pr-close.yml
     secrets: inherit
