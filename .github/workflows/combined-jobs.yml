@@ -22,14 +22,13 @@ jobs:
 
   validate-ci-org:
     name: 'Ci-Org Validation'
-    runs-on: ubuntu-latest
     uses: ./.github/workflows/pr-ci-org-validation.yml
     secrets: inherit
 
   deploy-to-maxqa:
     name: 'Deploy to MAxQA'
     needs:
-      - validate-changes
+      - validate-max-qa
       - validate-ci-org
     runs-on: ubuntu-latest
     steps:
