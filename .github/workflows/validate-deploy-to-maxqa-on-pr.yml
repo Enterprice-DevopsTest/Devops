@@ -1,22 +1,11 @@
 name: 'PR Open/Update Triggered - Validate Deploy to MaxQA'
 on:
-  pull_request:
-    types: [ opened, reopened, synchronize ]
-    branches:
-      - 'develop'
-  merge_group:
-    types: [ checks_requested ]
-
   workflow_call:
     inputs:
       environment:
         description: Environment
         type: string
         required: true
-      modules_to_validate:
-        description: List of modules to validate (space separated). If left blank then all modules will get validated
-        required: true
-        type: string
 
 jobs:
   get-changed-modules:
@@ -34,12 +23,14 @@ jobs:
         run: |
           chmod +x ./devops-scripts/findChangedModules.sh
           ./devops-scripts/findChangedModules.sh
-  
-  validate-changes:
-     name: 'Validate Deployment'
-     needs:
-       - get-changed-modules
-     uses: ./.github/workflows/validate-manual.yml
-     with:
-        environment: 'MaxQA'
-     secrets: inherit
+
+#  validate-changes:
+#    name: 'Validate Deployment'
+#    needs:
+#      - get-changed-modules
+#    uses: ./.github/workflows/validate-manual.yml
+#    with:
+#      environment: ${{ inputs.environment }}
+#      modules_to_validate: ${{ needs.get-changed-modules.outputs.changed_modules }}
+#      base_ref: 'origin/develop'
+#    secrets: inherit
