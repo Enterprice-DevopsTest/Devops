@@ -52,3 +52,11 @@ jobs:
   ci-org-validation:
     uses: ./.github/workflows/pr-ci-org-validation.yml
     secrets: inherit
+
+  deploy-to-max-qa:
+    name: 'Validate Deployment'
+    needs:
+      - ci-org-validation
+      - validate-changes
+    uses: ./.github/workflows/deploy-to-maxqa-after-pr-close.yml
+    secrets: inherit

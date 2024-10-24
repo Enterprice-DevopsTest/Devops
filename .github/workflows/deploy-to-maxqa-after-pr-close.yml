@@ -1,9 +1,6 @@
 name: 'Push to develop branch - Deploy to MaxQA'
 on:
-  workflow_run:
-    workflows: [ "PR Open/Update Triggered - Validate Deploy to MaxQA" ]  # Name of the workflow to monitor
-    types:
-      - completed
+  workflow_call:
   merge_group:
 
 jobs:
