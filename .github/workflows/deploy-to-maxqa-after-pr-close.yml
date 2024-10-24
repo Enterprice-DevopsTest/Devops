@@ -1,11 +1,11 @@
 name: 'Push to develop branch - Deploy to MaxQA'
 on:
-  workflow_call:
-    inputs:
-      environment:
-        description: Environment
-        type: string
-        required: true
+  workflow_run:
+    workflows: ["Pull Request Validation - CI-Org", "PR Open/Update Triggered - Validate Deploy to MaxQA"]  # Name of the workflow to monitor
+    types:
+      - completed
+  merge_group:
+    types: [ checks_requested ]
 
 jobs:
   deploy-to-maxqa:
@@ -19,7 +19,7 @@ jobs:
       # Sets the allowed modifications to be controlled by DevOps team members
       ALLOWED_DEV_MODIFICATIONS: ${{ vars.ALLOWED_DEV_MODIFICATIONS }}
       DEVOPS_TEAM: ${{ vars.DEVOPS_TEAM }}
-    environment: ${{ inputs.environment }}
+    environment: 'MaxQA'
     outputs:
       should_notify: ${{ steps.check.outputs.should_notify }}
     steps:
@@ -33,6 +33,9 @@ jobs:
 
       - name: Install JS dependencies
         run: npm ci
+
+      - name: Show event
+        run: echo "name- $GITHUB_EVENT_NAME"
 
 #      - name: Get Changed Packages
 #        id: detect_changes

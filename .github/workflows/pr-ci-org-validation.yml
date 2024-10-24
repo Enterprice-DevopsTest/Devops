@@ -1,8 +1,7 @@
 name: 'Pull Request Validation - CI-Org'
 on:
   pull_request:
-    types: [ labeled ]
-  workflow_call:
+    types: [ opened, reopened, synchronize, labeled ]
 
 jobs:
   test-job:
