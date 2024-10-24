@@ -1,7 +1,7 @@
 public with sharing class classNameTest {
     public void method1() {
 
-        Integer a = 10;
+        Integer a = 1;
         Integer b = 20;
         Integer c = a + b;
         System.debug(c);
