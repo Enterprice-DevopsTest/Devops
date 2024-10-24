@@ -9,6 +9,7 @@ on:
       - '.github/workflows/**'
     branches:
       - 'develop'
+  merge_group:
 
   workflow_call:
     inputs:
@@ -51,4 +52,12 @@ jobs:
 
   ci-org-validation:
     uses: ./.github/workflows/pr-ci-org-validation.yml
+    secrets: inherit
+
+  deploy-to-max-qa:
+    name: 'Deployment'
+    needs:
+      - ci-org-validation
+      - validate-changes
+    uses: ./.github/workflows/deploy-to-maxqa-after-pr-close.yml
     secrets: inherit
