@@ -2,8 +2,6 @@ name: 'Push to develop branch - Deploy to MaxQA'
 on:
   workflow_call:
 
-  merge_group:
-
 jobs:
   deploy-to-maxqa:
     # The type of runner that the job will run on
