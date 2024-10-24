@@ -58,9 +58,6 @@ jobs:
 
   deploy-to-max-qa:
     name: 'Deployment'
-    needs:
-      - ci-org-validation
-      - validate-changes
     if: |
       (
         needs.ci-org-validation.result == 'success' || 
