@@ -71,6 +71,6 @@ jobs:
             needs.validate-changes.result == 'skipped' && 
             needs.ci-org-validation.result == 'skipped'
           )
-        )
+     )
     uses: ./.github/workflows/deploy-to-maxqa-after-pr-close.yml
     secrets: inherit
