@@ -41,6 +41,7 @@ jobs:
 
   validate-changes:
     name: 'Validate Deployment'
+    if: ${{ github.event_name != 'merge_group' }}
     needs:
       - get-changed-modules
     uses: ./.github/workflows/validate-manual.yml
