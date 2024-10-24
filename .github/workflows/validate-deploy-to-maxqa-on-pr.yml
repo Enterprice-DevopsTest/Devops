@@ -61,6 +61,6 @@ jobs:
     needs:
       - ci-org-validation
       - validate-changes
-    if: github.event_name == 'merge_group' || (needs.validate-changes.result == 'success' && needs.ci-org-validation.result == 'success')
+    if: github.event_name == 'merge_group'
     uses: ./.github/workflows/deploy-to-maxqa-after-pr-close.yml
     secrets: inherit
