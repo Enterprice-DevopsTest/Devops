@@ -32,11 +32,15 @@ jobs:
       GH_TOKEN: ${{ github.token }}
     runs-on: ubuntu-latest
     steps:
+      # Add the checkout step to ensure the repository is available
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Validate PR
         run: |
           if [ "${{ github.event_name }}" == "pull_request" ]; then
             echo "Validate with PR workflow..."
             gh workflow run .github/workflows/deploy-to-maxqa-after-pr-close.yml
           elif [ "${{ github.event_name }}" == "merge_group" ]; then
-            echo "Validatedc done..."
+            echo "Validated done..."
           fi
