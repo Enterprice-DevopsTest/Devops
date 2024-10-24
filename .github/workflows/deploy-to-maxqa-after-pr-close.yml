@@ -31,7 +31,7 @@ jobs:
       - name: Workflow run
         run: |
           run="${{ github.event.workflow_run }}"
-          echo "run"
+          echo "$run"
 
       - name: Show event
         run: echo "name- $GITHUB_EVENT_NAME"
