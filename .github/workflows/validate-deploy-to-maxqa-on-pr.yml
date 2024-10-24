@@ -24,7 +24,6 @@ on:
 
 jobs:
   get-changed-modules:
-    if: github.event_name != 'merge_group'
     outputs:
       changed_modules: ${{ steps.detect_changes.outputs.changed_modules }}
     runs-on: ubuntu-latest
@@ -59,17 +58,12 @@ jobs:
 
   deploy:
     name: 'Deployment'
-    needs:
-      - ci-org-validation
-      - validate-changes
     if: |
-      (
-        needs.ci-org-validation.result == 'success' && 
-        needs.validate-changes.result == 'success'
-      ) ||  
-      (
-        needs.validate-changes.result == 'skipped' && 
-        needs.ci-org-validation.result == 'skipped'
-      )
+      github.event_name == 'merge_group' || (
+        (
+          needs.ci-org-validation.result == 'success' && 
+          needs.validate-changes.result == 'success'
+        )
+     )
     uses: ./.github/workflows/deploy-to-maxqa-after-pr-close.yml
     secrets: inherit
