@@ -31,14 +31,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Validate PR
-        if: github.event_name == 'pull_request'
-        uses: ./.github/workflows/deploy-to-maxqa-after-pr-close.yml
-        with:
-          environment: ${{ inputs.environment }}
-          modules_to_validate: ${{ needs.get-changed-modules.outputs.changed_modules }}
-          base_ref: 'origin/develop'
-        secrets: inherit
-
-      - name: Validate for Merge Groups
-        if: github.event_name == 'merge_group'
-        run: echo "Validated"
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "Validate with PR workflow..."
+            gh workflow run .github/workflows/deploy-to-maxqa-after-pr-close.yml
+          elif [ "${{ github.event_name }}" == "merge_group" ]; then
+            echo "Validatedc done..."
+          fi
