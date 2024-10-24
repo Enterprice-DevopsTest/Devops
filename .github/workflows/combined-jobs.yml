@@ -2,82 +2,42 @@ name: 'Validate changes with deployment'
 on:
   pull_request:
     types: [ opened, reopened, synchronize ]
+    paths:
+      - 'src/**'
+      - 'src-org-dependent/**'
+      - 'devops-scripts/**'
+      - '.github/workflows/**'
     branches:
       - 'develop'
   merge_group:
     types: [ checks_requested ]
 
 jobs:
-  get-changed-modules:
-    outputs:
-      changed_modules: ${{ steps.detect_changes.outputs.changed_modules }}
-    runs-on: ubuntu-latest
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Get Changed Packages
-        id: detect_changes
-        run: |
-          chmod +x ./devops-scripts/findChangedModules.sh
-          ./devops-scripts/findChangedModules.sh
-
-  validate-changes:
-    name: 'Validate Deployment'
-    needs:
-      - get-changed-modules
-    uses: ./.github/workflows/validate-manual.yml
+  validate-max-qa:
+    name: 'Validate MaxQA Deployment'
+    uses: ./.github/workflows/validate-deploy-to-maxqa-on-pr.yml
     with:
       environment: 'MaxQA'
-      parent_event: ${{ github.event_name }}
     secrets: inherit
 
   validate-ci-org:
-    needs:
-      - get-changed-modules
+    name: 'Ci-Org Validation'
     runs-on: ubuntu-latest
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Validate Ci-Org
-        run: echo "Ci-Org validation"
+    uses: ./.github/workflows/pr-ci-org-validation.yml
+    secrets: inherit
 
   deploy-to-maxqa:
+    name: 'Deploy to MAxQA'
     needs:
       - validate-changes
       - validate-ci-org
     runs-on: ubuntu-latest
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - name: Deploy for PRs
+        if: github.event_name == 'pull_request'
+        run: echo "Ready to deploy"
 
-      - name: Get Changed Packages
-        id: detect_changes
-        run: |
-          chmod +x ./devops-scripts/findChangedModules.sh
-          ./devops-scripts/findChangedModules.sh   #compare changes vs previous commit in develop branch
-
-      - name: Authenticate
-        id: auth
-        run: |
-          echo "Authenticated success"
-
-      - name: Deploy Changes To MaxQA
-        id: deploy_changes
-        run: |
-          echo "$GITHUB_EVENT_NAME"
-          if [ "$GITHUB_EVENT_NAME" = "merge_group" ]; then
-            echo "Start deploying"
-            echo "Failed"
-            exit 1
-          else
-            echo "Ready to deploy"
-          fi
-          
-
+      - name: Deploy for Merge Groups
+        if: github.event_name == 'merge_group'
+        uses: ./.github/workflows/deploy-to-maxqa-after-pr-close.yml
+        secrets: inherit
