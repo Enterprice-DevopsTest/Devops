@@ -49,6 +49,6 @@ jobs:
       base_ref: 'origin/develop'
     secrets: inherit
 
-    ci-org-validation:
-      uses: ./.github/workflows/pr-ci-org-validation.yml
-      secrets: inherit
+  ci-org-validation:
+    uses: ./.github/workflows/pr-ci-org-validation.yml
+    secrets: inherit
