@@ -24,13 +24,21 @@ jobs:
           chmod +x ./devops-scripts/findChangedModules.sh
           ./devops-scripts/findChangedModules.sh
 
-#  validate-changes:
-#    name: 'Validate Deployment'
-#    needs:
-#      - get-changed-modules
-#    uses: ./.github/workflows/validate-manual.yml
-#    with:
-#      environment: ${{ inputs.environment }}
-#      modules_to_validate: ${{ needs.get-changed-modules.outputs.changed_modules }}
-#      base_ref: 'origin/develop'
-#    secrets: inherit
+  validate-changes:
+    name: 'Validate Deployment'
+    needs:
+      - get-changed-modules
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR
+        if: github.event_name == 'pull_request'
+        uses: ./.github/workflows/deploy-to-maxqa-after-pr-close.yml
+        with:
+          environment: ${{ inputs.environment }}
+          modules_to_validate: ${{ needs.get-changed-modules.outputs.changed_modules }}
+          base_ref: 'origin/develop'
+        secrets: inherit
+
+      - name: Validate for Merge Groups
+        if: github.event_name == 'merge_group'
+        run: echo "Validated"
