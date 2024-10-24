@@ -51,21 +51,27 @@ jobs:
 #          git config --global --add safe.directory /__w/mortgagesfdc-homes-crm/mortgagesfdc-homes-crm
 #          sf sgd:source:delta --to "HEAD" --from "HEAD~1" --output ./src --source src/
 
-      - name: Authenticate
-        id: auth
-        env:
-          SFDXAUTHURL: ${{secrets.SFDX_AUTH_URL}}  #TODO Use the real environment variables from github
-        run: |
-          chmod +x ./devops-scripts/authenticate.sh
-          ./devops-scripts/authenticate.sh "--set-default --alias MaxQA"
-
-#      - name: Deploy Changes To MaxQA
-#        id: deploy_changes
+#      - name: Authenticate
+#        id: auth
+#        env:
+#          SFDXAUTHURL: ${{secrets.SFDX_AUTH_URL}}  #TODO Use the real environment variables from github
 #        run: |
-#          chmod +x ./devops-scripts/includeChangedBREMetadata.sh
-#          ./devops-scripts/includeChangedBREMetadata.sh
-#          chmod +x ./devops-scripts/runDeployments.sh
-#          ./devops-scripts/runDeployments.sh ${{steps.detect_changes.outputs.changed_modules}}
+#          chmod +x ./devops-scripts/authenticate.sh
+#          ./devops-scripts/authenticate.sh "--set-default --alias MaxQA"
+
+      - name: Deploy Changes To MaxQA
+        id: deploy_changes
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "merge_group" ]; then
+            echo "Deployment start"
+            exit 1
+            chmod +x ./devops-scripts/includeChangedBREMetadata.sh
+            ./devops-scripts/includeChangedBREMetadata.sh
+            chmod +x ./devops-scripts/runDeployments.sh
+            ./devops-scripts/runDeployments.sh ${{steps.detect_changes.outputs.changed_modules}}
+          else 
+           echo "Ready for deployment"
+          fi
 #
 #      - name: Create CalculationMatrixRow(s)
 #        if: ${{ steps.deploy_changes.outputs.decision_matrix_files != '' }}
