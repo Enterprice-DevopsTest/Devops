@@ -7,6 +7,14 @@ on:
         type: string
         required: true
 
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment
+        type: string
+        required: true
+        default: 'MaxQA'
+
 jobs:
   deploy-to-maxqa:
     # The type of runner that the job will run on
