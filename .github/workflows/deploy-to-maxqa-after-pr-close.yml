@@ -36,20 +36,20 @@ jobs:
       - name: Show event
         run: echo "name- $GITHUB_EVENT_NAME"
 
-#      - name: Get Changed Packages
-#        id: detect_changes
-#        run: |
-#          chmod +x ./devops-scripts/findChangedModules.sh
-#          ./devops-scripts/findChangedModules.sh HEAD^   #compare changes vs previous commit in develop branch
+      #      - name: Get Changed Packages
+      #        id: detect_changes
+      #        run: |
+      #          chmod +x ./devops-scripts/findChangedModules.sh
+      #          ./devops-scripts/findChangedModules.sh HEAD^   #compare changes vs previous commit in develop branch
 
-#      - name: Install SFDX Git Delta Plugin
-#        run: echo y | sf plugins:install sfdx-git-delta
-#
-#      - name: 'Create delta packages for new, modified or deleted metadata'
-#        id: delta_package
-#        run: |
-#          git config --global --add safe.directory /__w/mortgagesfdc-homes-crm/mortgagesfdc-homes-crm
-#          sf sgd:source:delta --to "HEAD" --from "HEAD~1" --output ./src --source src/
+      #      - name: Install SFDX Git Delta Plugin
+      #        run: echo y | sf plugins:install sfdx-git-delta
+      #
+      #      - name: 'Create delta packages for new, modified or deleted metadata'
+      #        id: delta_package
+      #        run: |
+      #          git config --global --add safe.directory /__w/mortgagesfdc-homes-crm/mortgagesfdc-homes-crm
+      #          sf sgd:source:delta --to "HEAD" --from "HEAD~1" --output ./src --source src/
 
 #      - name: Authenticate
 #        id: auth
@@ -58,6 +58,7 @@ jobs:
 #        run: |
 #          chmod +x ./devops-scripts/authenticate.sh
 #          ./devops-scripts/authenticate.sh "--set-default --alias MaxQA"
+
 
       - name: Deploy Changes To MaxQA
         id: deploy_changes
@@ -124,4 +125,3 @@ jobs:
 #          GITHUB_URL: ${{ github.server_url }}
 #          GITHUB_REPO: ${{ github.repository }}
 #          GITHUB_RUN: ${{ github.run_id }}
-#
