@@ -37,7 +37,6 @@ jobs:
           environment: ${{ inputs.environment }}
           modules_to_validate: ${{ needs.get-changed-modules.outputs.changed_modules }}
           base_ref: 'origin/develop'
-        secrets: inherit
 
       - name: Validate for Merge Groups
         if: github.event_name == 'merge_group'
