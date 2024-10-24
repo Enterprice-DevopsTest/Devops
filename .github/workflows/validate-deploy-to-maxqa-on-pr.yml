@@ -58,12 +58,19 @@ jobs:
 
   deploy:
     name: 'Deployment'
+    needs:
+      - ci-org-validation
+      - validate-changes
     if: |
-      github.event_name == 'merge_group' || (
-        (
-          needs.ci-org-validation.result == 'success' && 
-          needs.validate-changes.result == 'success'
+        github.event_name == 'merge_group' || (
+          (
+            needs.ci-org-validation.result == 'success' && 
+            needs.validate-changes.result == 'success'
+          ) ||  
+          (
+            needs.validate-changes.result == 'skipped' && 
+            needs.ci-org-validation.result == 'skipped'
+          )
         )
-     )
     uses: ./.github/workflows/deploy-to-maxqa-after-pr-close.yml
     secrets: inherit
