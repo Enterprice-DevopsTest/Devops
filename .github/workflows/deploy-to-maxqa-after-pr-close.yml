@@ -36,36 +36,42 @@ jobs:
       - name: Show event
         run: echo "name- $GITHUB_EVENT_NAME"
 
-#      - name: Get Changed Packages
-#        id: detect_changes
-#        run: |
-#          chmod +x ./devops-scripts/findChangedModules.sh
-#          ./devops-scripts/findChangedModules.sh HEAD^   #compare changes vs previous commit in develop branch
+      #      - name: Get Changed Packages
+      #        id: detect_changes
+      #        run: |
+      #          chmod +x ./devops-scripts/findChangedModules.sh
+      #          ./devops-scripts/findChangedModules.sh HEAD^   #compare changes vs previous commit in develop branch
 
-#      - name: Install SFDX Git Delta Plugin
-#        run: echo y | sf plugins:install sfdx-git-delta
-#
-#      - name: 'Create delta packages for new, modified or deleted metadata'
-#        id: delta_package
-#        run: |
-#          git config --global --add safe.directory /__w/mortgagesfdc-homes-crm/mortgagesfdc-homes-crm
-#          sf sgd:source:delta --to "HEAD" --from "HEAD~1" --output ./src --source src/
+      #      - name: Install SFDX Git Delta Plugin
+      #        run: echo y | sf plugins:install sfdx-git-delta
+      #
+      #      - name: 'Create delta packages for new, modified or deleted metadata'
+      #        id: delta_package
+      #        run: |
+      #          git config --global --add safe.directory /__w/mortgagesfdc-homes-crm/mortgagesfdc-homes-crm
+      #          sf sgd:source:delta --to "HEAD" --from "HEAD~1" --output ./src --source src/
 
-      - name: Authenticate
-        id: auth
-        env:
-          SFDXAUTHURL: ${{secrets.SFDX_AUTH_URL}}  #TODO Use the real environment variables from github
+      #      - name: Authenticate
+      #        id: auth
+      #        env:
+      #          SFDXAUTHURL: ${{secrets.SFDX_AUTH_URL}}  #TODO Use the real environment variables from github
+      #        run: |
+      #          chmod +x ./devops-scripts/authenticate.sh
+      #          ./devops-scripts/authenticate.sh "--set-default --alias MaxQA"
+
+      - name: Deploy Changes To MaxQA
+        id: deploy_changes
         run: |
-          chmod +x ./devops-scripts/authenticate.sh
-          ./devops-scripts/authenticate.sh "--set-default --alias MaxQA"
-
-#      - name: Deploy Changes To MaxQA
-#        id: deploy_changes
-#        run: |
-#          chmod +x ./devops-scripts/includeChangedBREMetadata.sh
-#          ./devops-scripts/includeChangedBREMetadata.sh
-#          chmod +x ./devops-scripts/runDeployments.sh
-#          ./devops-scripts/runDeployments.sh ${{steps.detect_changes.outputs.changed_modules}}
+          if [ "$GITHUB_EVENT_NAME" = "merge_group" ]; then
+            echo "Deployment start"
+            exit 1
+            chmod +x ./devops-scripts/includeChangedBREMetadata.sh
+            ./devops-scripts/includeChangedBREMetadata.sh
+            chmod +x ./devops-scripts/runDeployments.sh
+            ./devops-scripts/runDeployments.sh ${{steps.detect_changes.outputs.changed_modules}}
+          else 
+           echo "Ready for deployment"
+          fi
 #
 #      - name: Create CalculationMatrixRow(s)
 #        if: ${{ steps.deploy_changes.outputs.decision_matrix_files != '' }}
@@ -118,4 +124,3 @@ jobs:
 #          GITHUB_URL: ${{ github.server_url }}
 #          GITHUB_REPO: ${{ github.repository }}
 #          GITHUB_RUN: ${{ github.run_id }}
-#
