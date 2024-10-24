@@ -8,7 +8,7 @@ on:
       - 'devops-scripts/**'
       - '.github/workflows/**'
     branches:
-      - 'main'
+      - 'develop'
 
   workflow_call:
     inputs:

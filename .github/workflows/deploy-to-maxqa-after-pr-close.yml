@@ -4,6 +4,7 @@ on:
     workflows:
       - "Pull Request Validation - CI-Org"
       - "PR Open/Update Triggered - Validate Deploy to MaxQA"  # Name of the workflow to monitor
+    strategy: wait-all
     types:
       - completed
   merge_group:
