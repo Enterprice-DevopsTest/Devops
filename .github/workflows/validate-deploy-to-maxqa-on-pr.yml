@@ -56,19 +56,10 @@ jobs:
     uses: ./.github/workflows/pr-ci-org-validation.yml
     secrets: inherit
 
-  deploy-to-max-qa:
+  deploy:
     name: 'Deployment'
     needs:
       - ci-org-validation
       - validate-changes
-    if: |
-      (
-        needs.ci-org-validation.result == 'success' && 
-        needs.validate-changes.result == 'success'
-      ) ||  
-      (
-        needs.validate-changes.result == 'skipped' && 
-        needs.ci-org-validation.result == 'skipped'
-      )
     uses: ./.github/workflows/deploy-to-maxqa-after-pr-close.yml
     secrets: inherit
